@@ -2,7 +2,16 @@ import React from 'react';
 import './index.scss';
 import Collection from './Collection';
 
+const cats = [
+   { name: 'Все' },
+   { name: 'Море' },
+   { name: 'Горы' },
+   { name: 'Архитектура' },
+   { name: 'Города' },
+];
+
 function App() {
+   const [categoryId, setCategoryId] = React.useState(0);
    const [searchValue, setSearchValue] = React.useState('');
    const [collections, setCollections] = React.useState([]);
 
@@ -22,11 +31,11 @@ function App() {
 
          <div className="top">
             <ul className="tags">
-               <li className="active">Все</li>
-               <li>Горы</li>
-               <li>Море</li>
-               <li>Архитектура</li>
-               <li>Города</li>
+               {cats.map((cat, index) => (
+                  <li key={index} className={categoryId === index ? 'active' : null}>
+                     {cat.name}
+                  </li>
+               ))}
             </ul>
             <input
                onChange={(e) => setSearchValue(e.target.value)}
