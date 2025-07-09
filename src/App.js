@@ -12,6 +12,7 @@ const cats = [
 
 function App() {
    const [categoryId, setCategoryId] = React.useState(0);
+   const [page, setPage] = React.useState(1);
    const [isLoading, setIsLoading] = React.useState(true);
    const [searchValue, setSearchValue] = React.useState('');
    const [collections, setCollections] = React.useState([]);
@@ -81,11 +82,17 @@ function App() {
          </div>
 
          {/* pagination */}
-         {isLoading ? null : (
+         {!isLoading && (
             <ul className="pagination">
-               <li>1</li>
-               <li className="active">2</li>
-               <li>3</li>
+               {[...Array(5)].map((_, index) => (
+                  <li
+                     onClick={() => setPage(index + 1)}
+                     className={page === index + 1 ? 'active' : null}
+                     key={index}
+                  >
+                     {index + 1}
+                  </li>
+               ))}
             </ul>
          )}
       </div>
