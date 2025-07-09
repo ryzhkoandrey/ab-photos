@@ -19,10 +19,11 @@ function App() {
 
    React.useEffect(() => {
       setIsLoading(true);
+
+      const category = categoryId ? `&category=${categoryId}` : '';
+
       fetch(
-         `https://686d7addc9090c4953866e5a.mockapi.io/photo_collections${
-            categoryId ? `?category=${categoryId}` : ''
-         }`
+         `https://686d7addc9090c4953866e5a.mockapi.io/photo_collections?page=${page}&limit=3${category}`
       )
          .then((res) => res.json())
          .then((json) => setCollections(json))
@@ -31,7 +32,7 @@ function App() {
             alert('Ошибка при получении данных');
          })
          .finally(() => setIsLoading(false));
-   }, [categoryId]);
+   }, [categoryId, page]);
 
    return (
       <div className="App">
@@ -82,19 +83,17 @@ function App() {
          </div>
 
          {/* pagination */}
-         {!isLoading && (
-            <ul className="pagination">
-               {[...Array(5)].map((_, index) => (
-                  <li
-                     onClick={() => setPage(index + 1)}
-                     className={page === index + 1 ? 'active' : null}
-                     key={index}
-                  >
-                     {index + 1}
-                  </li>
-               ))}
-            </ul>
-         )}
+         <ul className="pagination">
+            {[...Array(5)].map((_, index) => (
+               <li
+                  onClick={() => setPage(index + 1)}
+                  className={page === index + 1 ? 'active' : null}
+                  key={index}
+               >
+                  {index + 1}
+               </li>
+            ))}
+         </ul>
       </div>
    );
 }
