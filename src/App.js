@@ -12,10 +12,12 @@ const cats = [
 
 function App() {
    const [categoryId, setCategoryId] = React.useState(0);
+   const [isLoading, setIsLoading] = React.useState(true);
    const [searchValue, setSearchValue] = React.useState('');
    const [collections, setCollections] = React.useState([]);
 
    React.useEffect(() => {
+      setIsLoading(true);
       fetch(
          `https://686d7addc9090c4953866e5a.mockapi.io/photo_collections${
             categoryId ? `?category=${categoryId}` : ''
@@ -26,7 +28,8 @@ function App() {
          .catch((err) => {
             console.warn(err);
             alert('Ошибка при получении данных');
-         });
+         })
+         .finally(() => setIsLoading(false));
    }, [categoryId]);
 
    return (
@@ -34,7 +37,7 @@ function App() {
          <h1>Моя коллекция фотографий</h1>
 
          <div className="top">
-            {/* {categories} */}
+            {/* categories */}
             <ul className="tags">
                {cats.map((cat, index) => (
                   <li
@@ -56,25 +59,35 @@ function App() {
             />
          </div>
 
+         {/* collections */}
          <div className="content">
-            {collections
-               .filter((collection) =>
-                  collection.name.toLowerCase().includes(searchValue.toLowerCase())
-               )
-               .map((collection, index) => (
-                  <Collection
-                     key={index}
-                     name={collection?.name}
-                     images={collection?.photos}
-                  />
-               ))}
+            {isLoading ? (
+               <h2>Идет загрузка...</h2>
+            ) : (
+               collections
+                  .filter((collection) =>
+                     collection.name
+                        .toLowerCase()
+                        .includes(searchValue.toLowerCase())
+                  )
+                  .map((collection, index) => (
+                     <Collection
+                        key={index}
+                        name={collection?.name}
+                        images={collection?.photos}
+                     />
+                  ))
+            )}
          </div>
 
-         <ul className="pagination">
-            <li>1</li>
-            <li className="active">2</li>
-            <li>3</li>
-         </ul>
+         {/* pagination */}
+         {isLoading ? null : (
+            <ul className="pagination">
+               <li>1</li>
+               <li className="active">2</li>
+               <li>3</li>
+            </ul>
+         )}
       </div>
    );
 }
