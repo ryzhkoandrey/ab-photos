@@ -16,27 +16,38 @@ function App() {
    const [collections, setCollections] = React.useState([]);
 
    React.useEffect(() => {
-      fetch('https://686d7addc9090c4953866e5a.mockapi.io/photo_collections')
+      fetch(
+         `https://686d7addc9090c4953866e5a.mockapi.io/photo_collections${
+            categoryId ? `?category=${categoryId}` : ''
+         }`
+      )
          .then((res) => res.json())
          .then((json) => setCollections(json))
          .catch((err) => {
             console.warn(err);
             alert('Ошибка при получении данных');
          });
-   }, []);
+   }, [categoryId]);
 
    return (
       <div className="App">
          <h1>Моя коллекция фотографий</h1>
 
          <div className="top">
+            {/* {categories} */}
             <ul className="tags">
                {cats.map((cat, index) => (
-                  <li key={index} className={categoryId === index ? 'active' : null}>
+                  <li
+                     onClick={() => setCategoryId(index)}
+                     className={categoryId === index ? 'active' : null}
+                     key={index}
+                  >
                      {cat.name}
                   </li>
                ))}
             </ul>
+
+            {/* search */}
             <input
                onChange={(e) => setSearchValue(e.target.value)}
                value={searchValue}
